@@ -7,23 +7,32 @@ import userImg from '../assets/arthur.png';
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
 
-export function Header(){
+interface HeaderProps {
+    title: string;
+    subtitle?: string;
+}
+
+export function Header({ title, subtitle = '' }: HeaderProps){
     const [userName,setUserName] = useState<string>();
+    const [subtitleComponent,setSubtitleComponent] = useState<string>();
 
     useEffect(() => {
         async function loadStorageUserName(){
             const user = await AsyncStorage.getItem('@plantmanager:user');
-            setUserName(user || '');
+            setSubtitleComponent(user || '');
         }
 
-        loadStorageUserName();
+        if(subtitle == '')
+            loadStorageUserName();
+        else
+            setSubtitleComponent(subtitle);
     },[]);
 
     return(
         <View style={styles.container}>
             <View>
-                <Text style={styles.greeting}>Olá,</Text>
-                <Text style={styles.userName}>{userName}</Text>
+                <Text style={styles.greeting}>{title}</Text>
+                <Text style={styles.userName}>{subtitleComponent}</Text>
             </View>
 
             <Image source={userImg} style={styles.image} />
